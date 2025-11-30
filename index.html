@@ -1,136 +1,321 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <title>HTML Student Info. Form</title>
+    <meta charset="UTF-8">
+    <title>Student Information Form</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    
-
-    <script src="https://code.jquery.com/jquery-3.7.0.min.js">
-       
-        function calculateAge(dob) {
-            const birthDate = new Date(dob);
-            const today = new Date();
-            let age = today.getFullYear() - birthDate.getFullYear();
-            const monthDiff = today.getMonth() - birthDate.getMonth();
-            const dayDiff = today.getDate() - birthDate.getDate();
-            if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
-                age--;
-            }
-            return age;
+    <style>
+        body {
+            background-image: url('kupi.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-attachment: fixed;
+            font-family: "Georgia", serif;
+            color: #3b2f2f;
+            padding: 20px 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
-        
-        function updateAge() {
+        h1 {
+            text-align: center;
+            color: #4b2e2e;
+            font-size: 32px;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px #f3ece3;
+        }
+
+        .form-box {
+            background: #fffaf0;
+            padding: 20px 25px;
+            border-radius: 12px;
+            border: 3px solid #a0522d;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 500px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .form-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 12px;
+            margin-bottom: 5px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #a0522d;
+            border-radius: 6px;
+            background-color: #fffaf0;
+            transition: 0.3s;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #6b3e2e;
+            box-shadow: 0 0 5px #6b3e2e;
+        }
+
+        .valid {
+            border-color: green;
+        }
+
+        .invalid {
+            border-color: red;
+        }
+
+        .error-msg {
+            color: red;
+            font-size: 13px;
+            display: none;
+            margin-top: 3px;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 12px;
+            width: 100%;
+            background-color: #a0522d;
+            color: white;
+            border: none;
+            font-size: 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background-color: #8b3e2e;
+            transform: scale(1.05);
+        }
+
+        #successPopup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            justify-content: center;
+            align-items: center;
+        }
+
+        #successMessage {
+            background: #fffaf0;
+            padding: 30px 40px;
+            border-radius: 12px;
+            border: 3px solid #a0522d;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        #successMessage h2 {
+            color: #4b2e2e;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Student Information Form</h1>
+
+    <div class="form-box">
+        <form id="studentForm">
+            <label>Student Number (Format: 22-22222):</label>
+            <input type="text" id="studentNum" placeholder="22-22222" maxlength="8" required>
+            <div class="error-msg" id="studentNumError">Invalid Student Number!</div>
+
+            <label>Last Name:</label>
+            <input type="text" id="lastName" required>
+            <div class="error-msg" id="lastNameError">Please enter your last name!</div>
+
+            <label>First Name:</label>
+            <input type="text" id="firstName" required>
+            <div class="error-msg" id="firstNameError">Please enter your first name!</div>
+
+            <label>Middle Name:</label>
+            <input type="text" id="middleName" placeholder="Optional">
+
+            <label>Date of Birth:</label>
+            <input type="date" id="dob" required>
+            <div class="error-msg" id="dobError">Please enter a valid date!</div>
+
+            <label>Age:</label>
+            <input type="text" id="age" readonly>
+
+            <label>Email:</label>
+            <input type="email" id="email" placeholder="example@gmail.com" required>
+            <div class="error-msg" id="emailError">Please enter a valid Gmail!</div>
+
+            <label>Complete Address:</label>
+            <input type="text" id="address1" placeholder="House Number/St., Brgy." required>
+            <div class="error-msg" id="address1Error">Please enter address!</div>
+            <input type="text" id="address2" placeholder="City/Municipality, Province" required>
+            <div class="error-msg" id="address2Error">Please enter city/province!</div>
+
+            <label>Year:</label>
+            <select id="year" required>
+                <option value="">-- Select Year --</option>
+                <option>1st year</option>
+                <option>2nd year</option>
+                <option>3rd year</option>
+                <option>4th year</option>
+            </select>
+            <div class="error-msg" id="yearError">Please select year!</div>
+
+            <label>Course:</label>
+            <select id="course" required>
+                <option value="">-- Select Course --</option>
+                <option>Bachelor of Science in Information Technology</option>
+                <option>Bachelor of Science in Computer Engineering</option>
+                <option>Bachelor of Science in Business Administration</option>
+                <option>Bachelor of Technology and Livelihood Education</option>
+            </select>
+            <div class="error-msg" id="courseError">Please select course!</div>
+
+            <label>Section:</label>
+            <select id="section" required>
+                <option value="">-- Select Section --</option>
+                <option>A</option>
+                <option>B</option>
+                <option>C</option>
+                <option>D</option>
+                <option>E</option>
+            </select>
+            <div class="error-msg" id="sectionError">Please select section!</div>
+
+            <label>Gender:</label>
+            <select id="gender" required>
+                <option value="">-- Select Gender --</option>
+                <option>Male</option>
+                <option>Female</option>
+                <option>Lesbian</option>
+                <option>Gay</option>
+                <option>Bisexual</option>
+                <option>Trans Gender</option>
+                <option>Others</option>
+            </select>
+            <div class="error-msg" id="genderError">Please select gender!</div>
+
+            <label>Profile Picture:</label>
+            <input type="file" id="profilePic" accept="image/*" required>
+            <div class="error-msg" id="profilePicError">Please upload a picture!</div>
+
+            <button type="submit">Register</button>
+        </form>
+    </div>
+
+    <div id="successPopup">
+        <div id="successMessage">
+            <h2>✔ Successfully Submitted!</h2>
+            <p>All your information has been recorded.</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const studentNum = document.getElementById("studentNum");
             const dobInput = document.getElementById("dob");
-            const ageDisplay = document.getElementById("ageDisplay");
+            const ageInput = document.getElementById("age");
 
-            if (dobInput.value) {
-                const age = calculateAge(dobInput.value);
-                ageDisplay.textContent = " " + age;
-            } else {
-                ageDisplay.textContent = "";
+            
+            studentNum.addEventListener("input", function () {
+                let val = this.value.replace(/\D/g, "");
+                if (val.length > 2) {
+                    val = val.slice(0, 2) + "-" + val.slice(2, 7);
+                }
+                this.value = val;
+                validateField("studentNum", /^\d{2}-\d{5}$/);
+            });
+
+            
+            dobInput.addEventListener("change", function () {
+                if (this.value) {
+                    const birthDate = new Date(this.value);
+                    const today = new Date();
+                    let age = today.getFullYear() - birthDate.getFullYear();
+                    const monthDiff = today.getMonth() - birthDate.getMonth();
+                    const dayDiff = today.getDate() - birthDate.getDate();
+                    if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) age--;
+                    ageInput.value = age;
+                    ageInput.classList.add("valid");
+                    dobInput.classList.add("valid");
+                    dobInput.classList.remove("invalid");
+                } else {
+                    ageInput.value = "";
+                    dobInput.classList.add("invalid");
+                    dobInput.classList.remove("valid");
+                }
+            });
+
+            function validateField(id, regex = null) {
+                const field = document.getElementById(id);
+                const value = field.value.trim();
+                const errorDiv = document.getElementById(id + "Error");
+
+                if (!value || (regex && !regex.test(value))) {
+                    field.classList.add("invalid");
+                    field.classList.remove("valid");
+                    if (errorDiv) errorDiv.style.display = "block";
+                    return false;
+                } else {
+                    field.classList.add("valid");
+                    field.classList.remove("invalid");
+                    if (errorDiv) errorDiv.style.display = "none";
+                    return true;
+                }
             }
-        }
 
-        
-        function submitForm(event) {
-            event.preventDefault(); 
-            alert("Form Submitted Successfully!");
-        }
+            ["lastName", "firstName", "middleName", "address1", "address2"].forEach(id =>
+                document.getElementById(id).addEventListener("input", () => validateField(id))
+            );
 
-      
-        window.addEventListener("DOMContentLoaded", function () {
-            document.getElementById("dob").addEventListener("change", updateAge);
-            document.getElementById("studentForm").addEventListener("submit", submitForm);
+            ["year", "course", "section", "gender", "profilePic"].forEach(id =>
+                document.getElementById(id).addEventListener("change", () => validateField(id))
+            );
+
+            document.getElementById("email").addEventListener("input", function () {
+                validateField("email", /^[a-zA-Z0-9._%+-]+@gmail\.com$/);
+            });
+
+            document.getElementById("studentForm").addEventListener("submit", function (e) {
+                e.preventDefault();
+                let valid = true;
+                valid &= validateField("studentNum", /^\d{2}-\d{5}$/);
+                valid &= validateField("lastName");
+                valid &= validateField("firstName");
+                valid &= validateField("dob");
+                valid &= validateField("email", /^[a-zA-Z0-9._%+-]+@gmail\.com$/);
+                valid &= validateField("address1");
+                valid &= validateField("address2");
+                valid &= validateField("year");
+                valid &= validateField("course");
+                valid &= validateField("section");
+                valid &= validateField("gender");
+                valid &= validateField("profilePic");
+
+                if (valid) {
+                    document.querySelector(".form-box").style.display = "none";
+                    document.getElementById("successPopup").style.display = "flex";
+                }
+            });
         });
     </script>
-</head>
- 
-<body>
-    <h1><b>Student Information Form</b></h1>
-    
-    <form id="studentForm">
-        <label><b>Student Number:</b></label>
-        <input type="text" id="studentNum" required placeholder="Student Number"> <br><br>
-
-        <label><b>Last Name:</b></label>
-        <input type="text" required placeholder="Input Last Name"> <br><br>
-
-        <label><b>First Name:</b></label> 
-        <input type="text" required placeholder="Input First Name"> <br><br>
-
-        <label><b>Middle Name:</b></label> 
-        <input type="text" required placeholder="(Optional)"> <br><br>
-
-        <label><b>Date of Birth: </b></label>
-        <input type="date" id="dob" name="dob"><br><br>
-        <b>Age:</b><span id="ageDisplay"></span><br><br>
-
-        
-
-        <label><b>Complete Address:</b></label> <br>
-        <input type="text" required placeholder="House Number/St., Brgy."> 
-        <input type="text" required placeholder="City/Municipality, Province"> <br><br>
-
-        <b>
-        <label>Year:</label>
-        <select name="year" required>
-         <option value="">-- Select Year --</option>
-         <option value="1st">1st year</option>
-         <option value="2nd">2nd year</option>
-         <option value="3rd">3rd year</option>
-         <option value="4th">4th year</option>
-        </select><br><br>
-
-        <label>Course:</label>
-        <select name="course" required>
-         <option value="">-- Select Course --</option>
-         <option value="BSIT">BSIT</option>
-         <option value="BSCpE">BSCpE</option>
-         <option value="BSBA">BSBA</option>
-         <option value="BTLED">BTLED</option>
-        </select><br><br> 
-
-        <label>Section:</label>
-        <select name="section" required>
-         <option value="">-- Select Section --</option>
-         <option value="BSIT">2A</option>
-         <option value="BSIT">2B</option>
-         <option value="BSIT">2C</option>
-         <option value="BSIT">2D</option>
-        </select><br><br>
-
-        <label>Gender:</label>
-        <select name="gender" required>
-        <option value="">-- Select Gender --</option>
-         <option value="M">Male</option>
-         <option value="F">Female</option>
-         <option value="L">Lesbian</option>
-         <option value="G">Gay</option>
-         <option value="B">Bisexual</option>
-         <option value="T">Trans Gender</option>
-         <option value="O">Others</option>
-        </select><br><br>
-        </b>
-
-        <label><b>Email:</b></label> 
-        <input type="email" required placeholder="Input Email"> <br><br>
-
-        <label><b>Profile Picture:</b></label> 
-        <input type="file" required accept="img/*"/> <br><br>
-
-        <button type="submit" id="submitBtn">Register</button>
-
-        
-    </form>
-
 </body>
-
-<script>
-    document.getElementById("studentNum").addEventListener("input", function() {
-        this.value = this.value.replace(/[^0-9\-]/g, "");
-    });
-</script>
 
 </html>
